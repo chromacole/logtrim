@@ -1,0 +1,401 @@
+{
+  "id": "generic",
+  "name": "Common Machines",
+  "icon": "🏃",
+  "isGeneric": true,
+  "rooms": [
+    {
+      "id": "outdoor-activities",
+      "name": "Outdoor Activities",
+      "machines": [
+        {
+          "id": "run",
+          "name": "Run",
+          "musclesWorked": "Cardiovascular system, legs, glutes, core",
+          "image": "run.jpg",
+          "logType": "cardio"
+        },
+        {
+          "id": "walk",
+          "name": "Walk",
+          "musclesWorked": "Cardiovascular system, legs, glutes",
+          "image": "walk.jpg",
+          "logType": "cardio"
+        },
+        {
+          "id": "bike-ride",
+          "name": "Bike Ride",
+          "musclesWorked": "Quadriceps, hamstrings, glutes, cardiovascular system",
+          "image": "bike-ride.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "swim",
+          "name": "Swim",
+          "musclesWorked": "Full body — arms, legs, core, cardiovascular system",
+          "image": "swim.jpg",
+          "logType": "cardio"
+        },
+        {
+          "id": "jump-rope",
+          "name": "Jump Rope",
+          "musclesWorked": "Calves, cardiovascular system, coordination, agility",
+          "image": "jump-rope.jpg",
+          "logType": "cardio"
+        }
+      ]
+    },
+    {
+      "id": "bodyweight-no-equipment",
+      "name": "Bodyweight — No Equipment",
+      "machines": [
+        {
+          "id": "push-ups",
+          "name": "Push Ups",
+          "musclesWorked": "Chest (pectoralis major), triceps, anterior deltoids, core",
+          "image": "push-ups.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "leg-lifts",
+          "name": "Leg Lifts",
+          "musclesWorked": "Lower abdominals, hip flexors",
+          "image": "leg-lifts.png",
+          "logType": "weight"
+        },
+        {
+          "id": "sit-ups",
+          "name": "Sit Ups",
+          "musclesWorked": "Rectus abdominis, hip flexors",
+          "image": "sit-ups.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "squats",
+          "name": "Squats",
+          "musclesWorked": "Quadriceps, glutes, hamstrings, core",
+          "image": "squats.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "lunges",
+          "name": "Lunges",
+          "musclesWorked": "Quadriceps, glutes, hamstrings, balance",
+          "image": "lunges.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "elbow-planks",
+          "name": "Elbow Planks",
+          "musclesWorked": "Core, transverse abdominis, shoulders",
+          "image": "elbow-planks.png",
+          "logType": "weight"
+        },
+        {
+          "id": "high-planks",
+          "name": "High Planks",
+          "musclesWorked": "Core, shoulders, triceps, wrists",
+          "image": "high-planks.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "side-planks",
+          "name": "Side Planks",
+          "musclesWorked": "Obliques, lateral stabilizers, hip abductors",
+          "image": "side-planks.png",
+          "logType": "weight"
+        },
+        {
+          "id": "bridges",
+          "name": "Bridges",
+          "musclesWorked": "Glutes, hamstrings, lower back, core",
+          "image": "bridges.png",
+          "logType": "weight"
+        },
+        {
+          "id": "wall-sits",
+          "name": "Wall Sits",
+          "musclesWorked": "Quadriceps, glutes, calves (isometric)",
+          "image": "wall-sits.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "downward-dog",
+          "name": "Downward Dog",
+          "musclesWorked": "Hamstrings, calves, shoulders, spine (stretch)",
+          "image": "downward-dog.jpg",
+          "logType": "weight"
+        }
+      ]
+    },
+    {
+      "id": "bodyweight-light-equipment",
+      "name": "Bodyweight — Light Equipment",
+      "machines": [
+        {
+          "id": "pull-ups",
+          "name": "Pull-ups",
+          "musclesWorked": "Latissimus dorsi, biceps, rhomboids, rear deltoids",
+          "image": "pull-ups.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "dips",
+          "name": "Dips",
+          "musclesWorked": "Triceps, chest (lower pec), anterior deltoids",
+          "image": "dips.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "decline-sit-ups",
+          "name": "Decline Sit Ups",
+          "musclesWorked": "Rectus abdominis, obliques, hip flexors",
+          "image": "decline-sit-ups.png",
+          "logType": "weight"
+        },
+        {
+          "id": "reverse-sit-ups",
+          "name": "Reverse Sit Ups",
+          "musclesWorked": "Lower abdominals, hip flexors",
+          "image": "reverse-sit-ups.png",
+          "logType": "weight"
+        }
+      ]
+    },
+    {
+      "id": "cardio",
+      "name": "Cardio",
+      "machines": [
+        {
+          "id": "treadmill",
+          "name": "Treadmill",
+          "musclesWorked": "Cardiovascular system — lower body endurance",
+          "image": "treadmill.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "elliptical",
+          "name": "Elliptical",
+          "musclesWorked": "Low-impact full-body cardiovascular workout",
+          "image": "elliptical.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "peloton",
+          "name": "Peloton",
+          "musclesWorked": "Cardiovascular conditioning — quadriceps, hamstrings, calves",
+          "image": "peloton.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "stationary-bike-upright",
+          "name": "Stationary Bike (Upright)",
+          "musclesWorked": "Cardiovascular system, quadriceps, hamstrings, glutes",
+          "image": "stationary-bike-upright.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "stationary-bike-recumbent",
+          "name": "Stationary Bike (Recumbent)",
+          "musclesWorked": "Low-impact cardio — quadriceps, hamstrings, glutes, calves",
+          "image": "stationary-bike-recumbent.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "rowing-machine",
+          "name": "Rowing Machine",
+          "musclesWorked": "60% legs · 20% core · 20% arms & back — full body cardio",
+          "image": "rowing-machine.png",
+          "logType": "cardio"
+        },
+        {
+          "id": "stair-climber",
+          "name": "Stair Climber",
+          "musclesWorked": "Glutes, quadriceps, hamstrings, calves — high-intensity cardio",
+          "image": "stair-climber.png",
+          "logType": "cardio"
+        }
+      ]
+    },
+    {
+      "id": "free-weights",
+      "name": "Free Weights",
+      "machines": [
+        {
+          "id": "barbell-bench-press",
+          "name": "Barbell Bench Press",
+          "musclesWorked": "Chest, triceps, anterior deltoids",
+          "image": "barbell-bench-press.png",
+          "logType": "weight"
+        },
+        {
+          "id": "barbell-incline-press",
+          "name": "Barbell Incline Press",
+          "musclesWorked": "Upper chest, anterior deltoids, triceps",
+          "image": "barbell-incline-press.png",
+          "logType": "weight"
+        },
+        {
+          "id": "barbell-squat",
+          "name": "Barbell Squat",
+          "musclesWorked": "Quadriceps, glutes, hamstrings, core, back",
+          "image": "barbell-squat.png",
+          "logType": "weight"
+        },
+        {
+          "id": "deadlift-barbell",
+          "name": "Deadlift — Barbell",
+          "musclesWorked": "Posterior chain — glutes, hamstrings, erector spinae, traps",
+          "image": "deadlift-barbell.png",
+          "logType": "weight"
+        },
+        {
+          "id": "seated-preacher-curl",
+          "name": "Seated Preacher Curl",
+          "musclesWorked": "Biceps brachii (isolated, elbows locked)",
+          "image": "seated-preacher-curl.png",
+          "logType": "weight"
+        },
+        {
+          "id": "standing-dumbbell-curl",
+          "name": "Standing Dumbbell Curl",
+          "musclesWorked": "Biceps brachii, brachialis",
+          "image": "standing-dumbbell-curl.png",
+          "logType": "weight"
+        },
+        {
+          "id": "dumbbell-incline-press",
+          "name": "Dumbbell Incline Press",
+          "musclesWorked": "Upper chest, anterior deltoids, triceps",
+          "image": "dumbbell-incline-press.png",
+          "logType": "weight"
+        },
+        {
+          "id": "overhead-tricep-extension",
+          "name": "Overhead Tricep Extension",
+          "musclesWorked": "Triceps brachii (long head)",
+          "image": "overhead-tricep-extension.png",
+          "logType": "weight"
+        },
+        {
+          "id": "dumbbell-front-raise",
+          "name": "Dumbbell Front Raise",
+          "musclesWorked": "Anterior deltoids",
+          "image": "dumbbell-front-raise.png",
+          "logType": "weight"
+        },
+        {
+          "id": "dumbbell-lateral-raise",
+          "name": "Dumbbell Lateral Raise",
+          "musclesWorked": "Middle deltoids (lateral head)",
+          "image": "dumbbell-lateral-raise.png",
+          "logType": "weight"
+        },
+        {
+          "id": "dumbbell-lunges",
+          "name": "Dumbbell Lunges",
+          "musclesWorked": "Quadriceps, glutes, hamstrings, balance",
+          "image": "dumbbell-lunges.png",
+          "logType": "weight"
+        }
+      ]
+    },
+    {
+      "id": "selectorized-machines",
+      "name": "Selectorized Machines",
+      "machines": [
+        {
+          "id": "chest-press",
+          "name": "Chest Press",
+          "musclesWorked": "Pectoralis major, anterior deltoids, triceps",
+          "image": "chest-press.png",
+          "logType": "weight"
+        },
+        {
+          "id": "pec-fly-machine",
+          "name": "Pec Fly Machine",
+          "musclesWorked": "Pectoralis major (isolation), anterior deltoids",
+          "image": "pec-fly-machine.png",
+          "logType": "weight"
+        },
+        {
+          "id": "lat-pulldown",
+          "name": "Lat Pulldown",
+          "musclesWorked": "Latissimus dorsi, rhomboids, biceps, rear deltoids",
+          "image": "lat-pulldown.png",
+          "logType": "weight"
+        },
+        {
+          "id": "tricep-pulldown-extension",
+          "name": "Tricep Pulldown Extension",
+          "musclesWorked": "Triceps brachii",
+          "image": "tricep-pulldown-extension.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "seated-row",
+          "name": "Seated Row",
+          "musclesWorked": "Lats, rhomboids, middle trapezius, rear deltoids, biceps",
+          "image": "seated-row.png",
+          "logType": "weight"
+        },
+        {
+          "id": "shoulder-press",
+          "name": "Shoulder Press",
+          "musclesWorked": "Deltoids, triceps",
+          "image": "shoulder-press.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "bicep-curl",
+          "name": "Bicep Curl",
+          "musclesWorked": "Biceps brachii",
+          "image": "bicep-curl.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "leg-press",
+          "name": "Leg Press",
+          "musclesWorked": "Quadriceps, glutes, hamstrings",
+          "image": "leg-press.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "leg-extension",
+          "name": "Leg Extension",
+          "musclesWorked": "Quadriceps (isolated)",
+          "image": "leg-extension.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "leg-curl",
+          "name": "Leg Curl",
+          "musclesWorked": "Hamstrings (isolated)",
+          "image": "leg-curl.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "hip-abduction",
+          "name": "Hip Abduction (open)",
+          "musclesWorked": "Outer glutes (gluteus medius) and outer thighs",
+          "image": "hip-abduction.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "hip-adduction",
+          "name": "Hip Adduction",
+          "musclesWorked": "Inner thigh muscles (adductors)",
+          "image": "hip-adduction.jpg",
+          "logType": "weight"
+        },
+        {
+          "id": "ab-crunch-machine",
+          "name": "Ab Crunch / Ab Machine",
+          "musclesWorked": "Rectus abdominis (upper and lower)",
+          "image": "ab-crunch-machine.jpg",
+          "logType": "weight"
+        }
+      ]
+    }
+  ]
+}

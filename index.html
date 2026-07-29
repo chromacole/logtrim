@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LogTrim</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--card:#1c1c1e;--card2:#2c2c2e;
+  --accent:#f5a623;--adim:rgba(245,166,35,.15);
+  --text:#fff;--dim:#8e8e93;--bdr:rgba(255,255,255,.1);
+  --ok:#30d158;--bad:#ff453a;--navh:56px;
+  --safe:env(safe-area-inset-bottom,0px)
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+#app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;overflow:hidden}
+.scr{display:none;flex:1;flex-direction:column;height:100%;overflow:hidden}
+.scr.on{display:flex}
+/* Nav bar */
+.nav{display:flex;align-items:center;padding:0 16px;height:var(--navh);background:var(--card);border-bottom:1px solid var(--bdr);flex-shrink:0;gap:8px}
+.nav h1{flex:1;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb{background:none;border:none;color:var(--accent);font-size:26px;cursor:pointer;padding:4px 6px;line-height:1;min-width:40px;text-align:center}
+.nb.sm{font-size:14px;font-weight:700}
+/* Scroll area */
+.sc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(20px + var(--safe))}
+/* Section header */
+.sh{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:20px 16px 8px}
+/* Gym card */
+.gc{display:flex;align-items:center;background:var(--card);margin:6px 16px;border-radius:12px;padding:16px;gap:14px;cursor:pointer;border:1px solid var(--bdr);-webkit-tap-highlight-color:transparent}
+.gc:active{opacity:.7}
+.gi{font-size:28px;width:44px;text-align:center;flex-shrink:0}
+.gi2 h2{font-size:16px;font-weight:600}
+.gi2 p{font-size:13px;color:var(--dim);margin-top:2px}
+.ch{margin-left:auto;color:var(--dim);font-size:20px;flex-shrink:0}
+/* Machine grid */
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px}
+.mc{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid var(--bdr);-webkit-tap-highlight-color:transparent}
+.mc:active{opacity:.7}
+.mi{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--dim)}
+.mi img{width:100%;height:100%;object-fit:cover;display:block}
+.mn{padding:10px}
+.mn h3{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:4px}
+.ml{font-size:11px;color:var(--accent);line-height:1.3}
+.mn0{font-size:11px;color:var(--dim)}
+/* Machine detail */
+.hero{width:100%;aspect-ratio:16/9;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:64px;color:var(--dim);flex-shrink:0;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
+.dm{padding:16px;border-bottom:1px solid var(--bdr)}
+.dm h2{font-size:22px;font-weight:700}
+.dm .mu{font-size:14px;color:var(--dim);margin-top:6px}
+.lb{display:block;width:calc(100% - 32px);margin:16px auto;padding:16px;background:var(--accent);color:#000;font-size:17px;font-weight:700;border:none;border-radius:12px;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
+.lb:active{opacity:.8}
+/* History */
+.hi{border-bottom:1px solid var(--bdr);padding:12px 16px}
+.hd{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.ha{display:flex;gap:12px}
+.ha button{background:none;border:none;font-size:16px;cursor:pointer;color:var(--dim);padding:2px}
+.sr{display:flex;font-size:13px;color:var(--dim);padding:3px 0;gap:8px}
+.sn{min-width:44px}
+.sv{color:var(--text);font-weight:500}
+.hn{font-size:12px;color:var(--dim);font-style:italic;margin-top:6px}
+/* Forms */
+.fs{padding:14px 16px;border-bottom:1px solid var(--bdr)}
+.fs h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:10px}
+.fi{background:var(--card2);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-size:15px;padding:10px 12px;outline:none;width:100%;-webkit-appearance:none}
+.fi:focus{border-color:var(--accent)}
+/* Toggle */
+.tt{display:flex;background:var(--card2);border-radius:8px;padding:3px;gap:3px}
+.tt button{flex:1;padding:9px;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:none;color:var(--dim);transition:all .15s}
+.tt button.on{background:var(--accent);color:#000}
+/* Set table */
+.st{width:100%;border-collapse:collapse}
+.st th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:6px 4px;text-align:center}
+.st td{padding:4px;text-align:center}
+.st td:first-child{color:var(--dim);font-size:13px;width:28px}
+.st input{background:var(--card2);border:1px solid var(--bdr);border-radius:6px;color:var(--text);font-size:15px;padding:8px 4px;width:100%;text-align:center;outline:none;-webkit-appearance:none}
+.st input:focus{border-color:var(--accent)}
+.xb{background:none;border:none;color:var(--bad);font-size:20px;cursor:pointer;padding:4px;width:32px;line-height:1}
+.ab{display:block;width:100%;margin-top:10px;padding:10px;background:var(--card2);border:1px dashed var(--bdr);border-radius:8px;color:var(--dim);font-size:14px;font-weight:600;cursor:pointer;text-align:center}
+/* Save btn */
+.sb{display:block;width:calc(100% - 32px);margin:16px auto;padding:16px;background:var(--ok);color:#000;font-size:17px;font-weight:700;border:none;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sb:active{opacity:.8}
+.sb:disabled{opacity:.4;cursor:not-allowed}
+/* Room list */
+.ri{display:flex;align-items:center;background:var(--card);margin:6px 16px;border-radius:12px;padding:18px 16px;gap:14px;cursor:pointer;border:1px solid var(--bdr);-webkit-tap-highlight-color:transparent}
+.ri:active{opacity:.7}
+.ri h2{flex:1;font-size:17px;font-weight:600}
+.ri .rc{font-size:13px;color:var(--dim)}
+/* Settings */
+.sg{background:var(--card);border-radius:12px;margin:8px 16px;overflow:hidden;border:1px solid var(--bdr)}
+.si{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bdr);gap:10px}
+.si:last-child{border-bottom:none}
+.si label{font-size:14px;color:var(--dim);min-width:86px;flex-shrink:0}
+.si input{flex:1;background:none;border:none;color:var(--text);font-size:15px;outline:none;text-align:right;min-width:0}
+.si input::placeholder{color:var(--dim)}
+.cb{background:var(--card2);border:none;border-radius:6px;color:var(--accent);font-size:12px;font-weight:700;padding:6px 10px;cursor:pointer;flex-shrink:0}
+.sl{display:flex;align-items:center;padding:16px;gap:10px;cursor:pointer;border-bottom:1px solid var(--bdr);-webkit-tap-highlight-color:transparent}
+.sl:last-child{border-bottom:none}
+.sl span{flex:1;font-size:15px}
+/* Equipment */
+.ei{background:var(--card);margin:8px 16px;border-radius:12px;border:1px solid var(--bdr);overflow:hidden}
+.eh{display:flex;align-items:center;padding:14px 16px;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.eh:active{opacity:.7}
+.en{flex:1;font-size:16px;font-weight:600}
+.ea button{background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--dim)}
+.addb{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 32px);margin:8px 16px;padding:14px;background:var(--adim);border:1px dashed var(--accent);border-radius:12px;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.addb:active{opacity:.8}
+/* Modal */
+#mov{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:flex-end;z-index:990;padding-bottom:var(--safe)}
+#mov.on{display:flex}
+.md{background:var(--card);border-radius:16px 16px 0 0;padding:24px 16px;width:100%;max-height:85vh;overflow-y:auto}
+.md h2{font-size:18px;font-weight:700;margin-bottom:18px}
+.mr{margin-bottom:14px}
+.mr label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin-bottom:6px}
+.mr input,.mr select,.mr textarea{width:100%;background:var(--card2);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-size:15px;padding:12px;outline:none;-webkit-appearance:none}
+.mr input:focus,.mr select:focus,.mr textarea:focus{border-color:var(--accent)}
+.mr textarea{resize:none;height:80px}
+.mbs{display:flex;gap:10px;margin-top:20px}
+.mbs button{flex:1;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+.mbs .mc2{background:var(--card2);color:var(--dim)}
+.mbs .mo{background:var(--accent);color:#000}
+.mbs .md2{background:rgba(255,69,58,.15);color:var(--bad);border:1px solid rgba(255,69,58,.3)}
+/* Photo */
+.pa{width:100%;aspect-ratio:4/3;background:var(--card2);border:2px dashed var(--bdr);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;gap:6px}
+.pa img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.ph{font-size:13px;color:var(--dim);position:relative;z-index:1}
+/* Profile */
+.pi{padding:12px 16px;border-bottom:1px solid var(--bdr)}
+.pi label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:7px}
+.pi input,.pi textarea{width:100%;background:var(--card2);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-size:15px;padding:10px 12px;outline:none;-webkit-appearance:none}
+.pi input:focus,.pi textarea:focus{border-color:var(--accent)}
+.pi textarea{resize:none;height:80px}
+/* Toast */
+#toast{position:fixed;bottom:calc(28px + var(--safe));left:50%;transform:translateX(-50%) translateY(16px);background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:10px 20px;font-size:14px;font-weight:500;pointer-events:none;opacity:0;transition:all .25s;white-space:nowrap;z-index:1000;max-width:calc(100vw - 32px)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.ok{border-color:var(--ok);color:var(--ok)}
+#toast.err{border-color:var(--bad);color:var(--bad)}
+/* Loading */
+#ld{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px}
+#ld.on{display:flex}
+.sp{width:36px;height:36px;border:3px solid var(--bdr);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* Empty */
+.em{text-align:center;padding:40px 24px;color:var(--dim)}
+.em .icon{font-size:48px;margin-bottom:12px}
+.em p{font-size:15px;line-height:1.5}
+/* Connect button */
+.conbtn{display:block;width:calc(100% - 32px);margin:16px auto;padding:15px;background:var(--accent);color:#000;font-size:16px;font-weight:700;border:none;border-radius:12px;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="s-home" class="scr on">
+  <div class="nav">
+    <h1>LogTrim &#127947;</h1>
+    <button class="nb" onclick="nav('settings')" title="Settings">&#9881;&#65039;</button>
+  </div>
+  <div class="sc">
+    <div class="sh">MY GYMS</div>
+    <div id="mygyms"></div>
+    <div class="sh">GENERIC GYM</div>
+    <div id="genGym"></div>
+  </div>
+</div>
+
+<!-- ROOMS -->
+<div id="s-rooms" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="rttl"></h1></div>
+  <div class="sc" id="rlist"></div>
+</div>
+
+<!-- MACHINES -->
+<div id="s-machines" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="mttl"></h1></div>
+  <div class="sc"><div class="mg" id="mgrid"></div></div>
+</div>
+
+<!-- DETAIL -->
+<div id="s-detail" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="dttl"></h1></div>
+  <div class="sc" id="dbody"></div>
+</div>
+
+<!-- LOG -->
+<div id="s-log" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="lttl">Log Session</h1></div>
+  <div class="sc" id="lbody"></div>
+</div>
+
+<!-- SETTINGS -->
+<div id="s-settings" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1>Settings</h1></div>
+  <div class="sc">
+    <div class="sh">GITHUB CONNECTION</div>
+    <div class="sg">
+      <div class="si"><label>Username</label><input id="su" type="text" placeholder="your-username" autocapitalize="none" spellcheck="false" oninput="saveCfg()"></div>
+      <div class="si"><label>Repository</label><input id="sr" type="text" placeholder="logtrim" autocapitalize="none" spellcheck="false" oninput="saveCfg()"></div>
+      <div class="si"><label>Token</label><input id="sp" type="password" placeholder="ghp_&#8230;" autocapitalize="none" spellcheck="false" oninput="saveCfg()"></div>
+    </div>
+    <button class="conbtn" onclick="connectGH()">Connect &amp; Load Data</button>
+    <div class="sh">YOUR DATA URLS</div>
+    <div class="sg">
+      <div class="si"><label>Workout CSV</label><button class="cb" onclick="copyUrl('csv')">Copy URL</button></div>
+      <div class="si"><label>Profile JSON</label><button class="cb" onclick="copyUrl('profile')">Copy URL</button></div>
+    </div>
+    <div class="sh">MANAGE</div>
+    <div class="sg">
+      <div class="sl" onclick="nav('equipment')"><span>Manage Equipment</span><span class="ch">&#8250;</span></div>
+      <div class="sl" onclick="nav('profile')"><span>My Profile</span><span class="ch">&#8250;</span></div>
+      <div class="sl" onclick="reloadData()"><span>Reload Data from GitHub</span><span class="ch">&#8250;</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPMENT -->
+<div id="s-equipment" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1>Manage Equipment</h1></div>
+  <div class="sc" id="eqlist"></div>
+</div>
+
+<!-- GYM DETAIL (equip) -->
+<div id="s-gymeq" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="geqttl"></h1></div>
+  <div class="sc" id="geqbody"></div>
+</div>
+
+<!-- ROOM DETAIL (equip) -->
+<div id="s-roomeq" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1 id="reqttl"></h1></div>
+  <div class="sc" id="reqbody"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="s-profile" class="scr">
+  <div class="nav"><button class="nb" onclick="back()">&#8249;</button><h1>My Profile</h1><button class="nb sm" onclick="saveProfile()">Save</button></div>
+  <div class="sc">
+    <div class="sh">ABOUT YOU</div>
+    <div class="sg">
+      <div class="pi"><label>First Name</label><input id="pfn" type="text" placeholder="Your name"></div>
+      <div class="pi"><label>Birth Year</label><input id="pby" type="number" placeholder="1980"></div>
+      <div class="pi"><label>Gender</label><input id="pg" type="text" placeholder="e.g. Male, Female"></div>
+    </div>
+    <div class="sh">FITNESS PROFILE</div>
+    <div class="sg">
+      <div class="pi"><label>Goals</label><textarea id="pgoals" placeholder="What are you working toward?"></textarea></div>
+      <div class="pi"><label>Exercises I Like</label><textarea id="plikes" placeholder="Machines or exercises you enjoy"></textarea></div>
+      <div class="pi"><label>Exercises I Dislike</label><textarea id="pdis" placeholder="Things you avoid"></textarea></div>
+      <div class="pi"><label>Injuries</label><textarea id="pinj" placeholder="Past or current injuries"></textarea></div>
+      <div class="pi"><label>Limitations</label><textarea id="plim" placeholder="Movements to avoid"></textarea></div>
+      <div class="pi"><label>Other Notes</label><textarea id="pnotes" placeholder="Anything else useful"></textarea></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<div id="toast"></div>
+<div id="ld"><div class="sp"></div><div id="ldmsg">Loading&#8230;</div></div>
+<div id="mov" onclick="closeMod(event)"><div class="md" id="mdbody"></div></div>
+<input type="file" id="photoin" accept="image/*" capture="environment" style="display:none">
+
+<script>
+// === STATE ===
+const A={
+  gyms:[],log:[],profile:{},
+  sha:{log:null,csv:null,profile:null,gym:{}},
+  stack:['home'],
+  gym:null,room:null,machine:null,
+  editDate:null,logType:'weight',
+  pendingPhoto:null,
+  cfg:{user:'',repo:'logtrim',pat:''}
+};
+
+// === CONFIG ===
+function loadCfg(){
+  try{Object.assign(A.cfg,JSON.parse(localStorage.getItem('lt-cfg')||'{}'))}catch(e){}
+  g('su').value=A.cfg.user||'';
+  g('sr').value=A.cfg.repo||'logtrim';
+  g('sp').value=A.cfg.pat||'';
+}
+function saveCfg(){
+  A.cfg.user=g('su').value.trim();
+  A.cfg.repo=g('sr').value.trim()||'logtrim';
+  A.cfg.pat=g('sp').value.trim();
+  localStorage.setItem('lt-cfg',JSON.stringify(A.cfg));
+}
+function hasCfg(){return!!(A.cfg.user&&A.cfg.repo&&A.cfg.pat)}
+function rawBase(){return`https://raw.githubusercontent.com/${A.cfg.user}/${A.cfg.repo}/main`}
+function apiBase(){return`https://api.github.com/repos/${A.cfg.user}/${A.cfg.repo}/contents`}
+
+// === GITHUB API ===
+async function ghGet(path){
+  const r=await fetch(`${apiBase()}/${path}`,{headers:{Authorization:`Bearer ${A.cfg.pat}`,Accept:'application/vnd.github.v3+json'}});
+  if(!r.ok)throw new Error(`GitHub ${r.status}`);
+  return r.json();
+}
+async function ghPut(path,content,sha,msg){
+  const body={message:msg||`Update ${path}`,content:b64e(content)};
+  if(sha)body.sha=sha;
+  const r=await fetch(`${apiBase()}/${path}`,{method:'PUT',headers:{Authorization:`Bearer ${A.cfg.pat}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok){const t=await r.text();throw new Error(`GitHub ${r.status}: ${t}`);}
+  return r.json();
+}
+async function ghPutImg(path,b64,sha){
+  const body={message:`Upload image ${path}`,content:b64.replace(/\s/g,'')};
+  if(sha)body.sha=sha;
+  const r=await fetch(`${apiBase()}/${path}`,{method:'PUT',headers:{Authorization:`Bearer ${A.cfg.pat}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error(`GitHub ${r.status}`);
+  return r.json();
+}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)))}
+function b64d(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
+
+// === DATA LOADING ===
+async function loadAll(){
+  if(!hasCfg()){renderHome();return}
+  showLd('Loading your data…');
+  try{
+    await Promise.all([loadGyms(),loadLog(),loadProfile()]);
+    hideLd();renderHome();
+  }catch(e){
+    hideLd();toast(`Load error: ${e.message}`,'err');renderHome();
+  }
+}
+async function loadGyms(){
+  A.gyms=[];
+  try{
+    const f=await ghGet('equipment/generic/gym.json');
+    const gd=JSON.parse(b64d(f.content));
+    gd._path='equipment/generic';gd._gen=true;A.gyms.push(gd);
+  }catch(e){console.warn('generic:',e)}
+  try{
+    const dirs=await ghGet('equipment/my-gyms');
+    await Promise.all(dirs.filter(d=>d.type==='dir').map(async d=>{
+      try{
+        const p=`equipment/my-gyms/${d.name}/gym.json`;
+        const f=await ghGet(p);
+        const gd=JSON.parse(b64d(f.content));
+        gd._path=`equipment/my-gyms/${d.name}`;gd._gen=false;
+        A.sha.gym[p]=f.sha;A.gyms.push(gd);
+      }catch(e){console.warn('gym',d.name,e)}
+    }));
+  }catch(e){console.warn('my-gyms:',e)}
+}
+async function loadLog(){
+  try{
+    const f=await ghGet('workout-log.json');
+    if(f.content){A.log=JSON.parse(b64d(f.content));A.sha.log=f.sha}
+    else if(f.download_url){const r=await fetch(f.download_url);A.log=await r.json();A.sha.log=f.sha}
+  }catch(e){console.warn('log:',e);A.log=[]}
+  try{const f=await ghGet('workout-log.csv');A.sha.csv=f.sha}catch(e){}
+}
+async function loadProfile(){
+  try{
+    const f=await ghGet('profile.json');
+    A.profile=JSON.parse(b64d(f.content));A.sha.profile=f.sha;
+  }catch(e){console.warn('profile:',e)}
+}
+async function reloadData(){await loadAll();toast('Data reloaded','ok')}
+async function connectGH(){
+  saveCfg();
+  if(!hasCfg()){toast('Enter all three fields first','err');return}
+  await loadAll();
+  toast(A.gyms.length||A.log.length?'Connected!':'No data found yet — check your settings','ok');
+}
+
+// === NAVIGATION ===
+function nav(id){
+  if(id==='equipment')renderEquip();
+  if(id==='profile')fillProfile();
+  if(A.stack[A.stack.length-1]!==id)A.stack.push(id);
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById(`s-${id}`);
+  if(el){el.classList.add('on');el.querySelectorAll('.sc').forEach(s=>s.scrollTop=0)}
+}
+function back(){
+  if(A.stack.length>1)A.stack.pop();
+  const id=A.stack[A.stack.length-1];
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById(`s-${id}`);
+  if(el)el.classList.add('on');
+}
+
+// === HOME ===
+function renderHome(){
+  const myEl=g('mygyms'),genEl=g('genGym');
+  const my=A.gyms.filter(x=>!x._gen);
+  const gen=A.gyms.find(x=>x._gen);
+  if(!hasCfg()){
+    myEl.innerHTML='<div class="em"><div class="icon">⚙️</div><p>Tap ⚙️ to connect your GitHub repo.</p></div>';
+    genEl.innerHTML='';return;
+  }
+  myEl.innerHTML=my.length?my.map(gymCard).join(''):'<div class="em"><div class="icon">🏟️</div><p>No gyms yet.<br>Go to Settings → Manage Equipment.</p></div>';
+  genEl.innerHTML=gen?gymCard(gen):'';
+}
+function gymCard(g2){
+  const tot=g2.rooms.reduce((s,r)=>s+r.machines.length,0);
+  const sub=g2.rooms.length>1?`${g2.rooms.length} rooms · ${tot} machines`:`${tot} machines`;
+  return`<div class="gc" onclick="openGym('${g2.id}')"><div class="gi">${g2.icon||'🏋️'}</div><div class="gi2"><h2>${x(g2.name)}</h2><p>${sub}</p></div><span class="ch">›</span></div>`;
+}
+function openGym(gid){
+  const g2=A.gyms.find(g=>g.id===gid);if(!g2)return;
+  A.gym=g2;
+  if(g2.rooms.length===1){A.room=g2.rooms[0];renderMachines();nav('machines')}
+  else{renderRooms();nav('rooms')}
+}
+
+// === ROOMS ===
+function renderRooms(){
+  g('rttl').textContent=A.gym.name;
+  g('rlist').innerHTML=A.gym.rooms.map(r=>`<div class="ri" onclick="openRoom('${r.id}')"><h2>${x(r.name)}</h2><span class="rc">${r.machines.length} machines</span><span class="ch">›</span></div>`).join('');
+}
+function openRoom(rid){
+  const r=A.gym.rooms.find(r=>r.id===rid);if(!r)return;
+  A.room=r;renderMachines();nav('machines');
+}
+
+// === MACHINE GRID ===
+function renderMachines(){
+  const ttl=A.gym.rooms.length>1?A.room.name:A.gym.name;
+  g('mttl').textContent=ttl;
+  g('mgrid').innerHTML=A.room.machines.map(m=>{
+    const ls=lastSess(m.id);
+    const iu=imgUrl(A.gym,m.image);
+    const ih=iu?`<div class="mi"><img src="${iu}" alt="${x(m.name)}" loading="lazy" onerror="this.parentElement.innerHTML='🏋️'"></div>`:`<div class="mi">🏋️</div>`;
+    const lh=ls?`<div class="ml">${fmtLast(ls)}</div>`:`<div class="mn0">No sessions yet</div>`;
+    return`<div class="mc" onclick="openMachine('${m.id}')">${ih}<div class="mn"><h3>${x(m.name)}</h3>${lh}</div></div>`;
+  }).join('');
+}
+function imgUrl(gym,fn){
+  if(!fn||!A.cfg.user||!A.cfg.repo)return null;
+  return`https://raw.githubusercontent.com/${A.cfg.user}/${A.cfg.repo}/main/${gym._path}/images/${encodeURIComponent(fn)}`;
+}
+function lastSess(mid){
+  const e=A.log.filter(e=>e.machineId===mid);if(!e.length)return null;
+  const d=[...new Set(e.map(e=>e.date))].sort().pop();
+  return e.filter(e=>e.date===d);
+}
+function fmtLast(sets){
+  const d=fmtDate(sets[0].date),f=sets[0];
+  if(f.weight!=null){const mx=Math.max(...sets.map(s=>s.weight||0));return`${d} · ${mx} lbs × ${sets.length} sets`}
+  if(f.duration!=null){const tot=sets.reduce((s,e)=>s+(e.duration||0),0);return`${d} · ${tot} min`}
+  return d;
+}
+function fmtDate(ds){
+  const d=new Date(ds+'T12:00:00'),t=new Date();t.setHours(12,0,0,0);
+  const diff=Math.round((t-d)/86400000);
+  if(diff===0)return'Today';if(diff===1)return'Yesterday';
+  if(diff<7)return`${diff}d ago`;
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function fmtDateFull(ds){
+  return new Date(ds+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+// === MACHINE DETAIL ===
+function openMachine(mid){
+  const m=A.room.machines.find(m=>m.id===mid);if(!m)return;
+  A.machine=m;renderDetail();nav('detail');
+}
+function renderDetail(){
+  const m=A.machine,gym=A.gym;
+  g('dttl').textContent=m.name;
+  const iu=imgUrl(gym,m.image);
+  const heroH=iu?`<div class="hero"><img src="${iu}" alt="${x(m.name)}" onerror="this.outerHTML='<div class=hero>🏋️</div>'"></div>`:`<div class="hero">🏋️</div>`;
+  const entries=A.log.filter(e=>e.machineId===m.id);
+  const dates=[...new Set(entries.map(e=>e.date))].sort().reverse().slice(0,3);
+  const histH=dates.length?dates.map(d=>{
+    const sets=entries.filter(e=>e.date===d).sort((a,b)=>a.set-b.set);
+    const notes=(sets.find(s=>s.notes)||{}).notes||'';
+    const isC=sets[0].duration!=null;
+    const rowsH=sets.map(s=>{
+      const v=isC?`${s.duration!=null?s.duration:'—'} min${s.level?' @ lvl '+s.level:''}`:`${s.weight!=null?s.weight:'—'} lbs × ${s.reps!=null?s.reps:'—'}`;
+      return`<div class="sr"><span class="sn">Set ${s.set}</span><span class="sv">${v}</span></div>`;
+    }).join('');
+    return`<div class="hi"><div class="hd"><span>${fmtDateFull(d)}</span><div class="ha"><button onclick="editSess('${d}')" title="Edit">✏️</button><button onclick="delSess('${d}')" title="Delete">🗑️</button></div></div>${rowsH}${notes?`<div class="hn">"${x(notes)}"</div>`:''}</div>`;
+  }).join(''):`<div class="em" style="padding:28px 24px"><div class="icon">📋</div><p>No sessions logged yet.</p></div>`;
+  g('dbody').innerHTML=`${heroH}<div class="dm"><h2>${x(m.name)}</h2>${m.musclesWorked?`<p class="mu">${x(m.musclesWorked)}</p>`:''}</div><button class="lb" onclick="startLog()">Log Today</button><div class="sh">HISTORY</div>${histH}`;
+}
+
+// === LOG SESSION ===
+function startLog(ed){A.editDate=ed||null;renderLog();nav('log')}
+function editSess(d){startLog(d)}
+
+function renderLog(){
+  const m=A.machine,editing=!!A.editDate;
+  g('lttl').textContent=editing?'Edit Session':m.name;
+  const today=new Date().toISOString().split('T')[0];
+  const date=A.editDate||today;
+  let defType=m.logType||'weight';
+  let prefill=[];
+  if(editing){
+    prefill=A.log.filter(e=>e.machineId===m.id&&e.date===A.editDate).sort((a,b)=>a.set-b.set);
+    if(prefill.length)defType=prefill[0].duration!=null?'cardio':'weight';
+  }else{
+    prefill=lastSess(m.id)||[{set:1,weight:'',reps:'',duration:'',level:''}];
+  }
+  A.logType=defType;
+  const isC=defType==='cardio';
+  const hideT=!!m.logType;
+  const prevNotes=editing?(A.log.find(e=>e.machineId===m.id&&e.date===A.editDate)||{}).notes||'':'';
+  g('lbody').innerHTML=`
+    <div class="fs"><h3>Date</h3><input type="date" id="ldate" class="fi" value="${date}" style="width:100%"></div>
+    <div class="fs"${hideT?' style="display:none"':''}>
+      <h3>Type</h3>
+      <div class="tt">
+        <button id="tw" class="${!isC?'on':''}" onclick="setType('weight')">Weight &amp; Reps</button>
+        <button id="tc" class="${isC?'on':''}" onclick="setType('cardio')">Duration &amp; Level</button>
+      </div>
+    </div>
+    <div class="fs"><h3>Sets</h3><div id="swrap">${buildTable(prefill,isC)}</div><button class="ab" onclick="addRow()">＋ Add Set</button></div>
+    <div class="fs"><h3>Notes</h3><textarea id="lnotes" class="fi" style="resize:none;height:80px" placeholder="How did it feel?">${x(prevNotes)}</textarea></div>
+    <button class="sb" id="svbtn" onclick="saveSess()">Save Session</button>`;
+}
+function buildTable(sets,isC){
+  const rows=sets.map((s,i)=>buildRow(i+1,s,isC)).join('');
+  const cols=isC?'<th>Duration (min)</th><th>Level</th>':'<th>Weight (lbs)</th><th>Reps</th>';
+  return`<table class="st"><thead><tr><th>#</th>${cols}<th></th></tr></thead><tbody id="stb">${rows}</tbody></table>`;
+}
+function buildRow(n,s,isC){
+  if(isC)return`<tr><td>${n}</td><td><input type="number" inputmode="decimal" class="sd" placeholder="30" value="${s.duration||''}"></td><td><input type="number" inputmode="decimal" class="sl2" placeholder="5" value="${s.level||''}"></td><td><button class="xb" onclick="rmRow(this)">×</button></td></tr>`;
+  return`<tr><td>${n}</td><td><input type="number" inputmode="decimal" class="sw" placeholder="0" value="${s.weight!=null&&s.weight!==''?s.weight:''}"></td><td><input type="number" inputmode="decimal" class="srp" placeholder="0" value="${s.reps!=null&&s.reps!==''?s.reps:''}"></td><td><button class="xb" onclick="rmRow(this)">×</button></td></tr>`;
+}
+function setType(t){
+  A.logType=t;
+  g('tw').className=t==='weight'?'on':'';
+  g('tc').className=t==='cardio'?'on':'';
+  g('swrap').innerHTML=buildTable([{set:1}],t==='cardio');
+}
+function addRow(){
+  const tb=document.getElementById('stb');if(!tb)return;
+  const n=tb.querySelectorAll('tr').length+1;
+  const tr=document.createElement('tr');
+  const isC=A.logType==='cardio';
+  if(isC)tr.innerHTML=`<td>${n}</td><td><input type="number" inputmode="decimal" class="sd" placeholder="30"></td><td><input type="number" inputmode="decimal" class="sl2" placeholder="5"></td><td><button class="xb" onclick="rmRow(this)">×</button></td>`;
+  else tr.innerHTML=`<td>${n}</td><td><input type="number" inputmode="decimal" class="sw" placeholder="0"></td><td><input type="number" inputmode="decimal" class="srp" placeholder="0"></td><td><button class="xb" onclick="rmRow(this)">×</button></td>`;
+  tb.appendChild(tr);renum();
+}
+function rmRow(btn){
+  const tb=btn.closest('tbody');
+  if(tb.querySelectorAll('tr').length<=1)return;
+  btn.closest('tr').remove();renum();
+}
+function renum(){document.querySelectorAll('#stb tr').forEach((r,i)=>r.cells[0].textContent=i+1)}
+
+async function saveSess(){
+  if(!hasCfg()){toast('Set up GitHub in Settings first','err');return}
+  const m=A.machine,gym=A.gym,rm=A.room;
+  const date=g('ldate').value;
+  const notes=(document.getElementById('lnotes')||{}).value||'';
+  const isC=A.logType==='cardio';
+  const rows=document.querySelectorAll('#stb tr');
+  const newSets=[];
+  rows.forEach((row,i)=>{
+    if(isC){
+      const dur=parseFloat((row.querySelector('.sd')||{}).value)||null;
+      const lvl=parseFloat((row.querySelector('.sl2')||{}).value)||null;
+      newSets.push({machineId:m.id,machine:m.name,gym:gym.name,room:rm.name,date,set:i+1,weight:null,reps:null,duration:dur,level:lvl,notes:i===0?notes.trim():''});
+    }else{
+      const wt=parseFloat((row.querySelector('.sw')||{}).value);
+      const rp=parseInt((row.querySelector('.srp')||{}).value);
+      newSets.push({machineId:m.id,machine:m.name,gym:gym.name,room:rm.name,date,set:i+1,weight:isNaN(wt)?null:wt,reps:isNaN(rp)?null:rp,duration:null,level:null,notes:i===0?notes.trim():''});
+    }
+  });
+  if(!newSets.length){toast('Add at least one set','err');return}
+  const btn=g('svbtn');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const updated=[...A.log.filter(e=>!(e.machineId===m.id&&e.date===date)),...newSets].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+    await writeLog(updated);A.log=updated;
+    toast('Session saved!','ok');back();renderDetail();
+  }catch(e){toast(`Save failed: ${e.message}`,'err');console.error(e)}
+  finally{const b=g('svbtn');if(b){b.disabled=false;b.textContent='Save Session'}}
+}
+
+async function delSess(date){
+  if(!confirm(`Delete session on ${fmtDateFull(date)}?`))return;
+  showLd('Deleting…');
+  try{
+    const updated=A.log.filter(e=>!(e.machineId===A.machine.id&&e.date===date));
+    await writeLog(updated);A.log=updated;hideLd();
+    toast('Session deleted','ok');renderDetail();
+  }catch(e){hideLd();toast(`Delete failed: ${e.message}`,'err')}
+}
+
+async function writeLog(entries){
+  const json=JSON.stringify(entries,null,2);
+  const jr=await ghPut('workout-log.json',json,A.sha.log,'Update workout log');
+  A.sha.log=jr.content.sha;
+  const csv=toCSV(entries);
+  const cr=await ghPut('workout-log.csv',csv,A.sha.csv,'Update workout log CSV');
+  A.sha.csv=cr.content.sha;
+}
+function toCSV(entries){
+  const h='date,gym,room,machine,machineId,set,weight,reps,duration,level,notes';
+  const rows=entries.map(e=>[e.date,csvEsc(e.gym),csvEsc(e.room),csvEsc(e.machine),e.machineId,e.set,e.weight!=null?e.weight:'',e.reps!=null?e.reps:'',e.duration!=null?e.duration:'',e.level!=null?e.level:'',csvEsc(e.notes||'')].join(','));
+  return[h,...rows].join('\n');
+}
+function csvEsc(s){return String(s||'').replace(/[,\n"]/g,' ')}
+
+// === SETTINGS ===
+function copyUrl(type){
+  if(!A.cfg.user||!A.cfg.repo){toast('Enter username and repo first','err');return}
+  const url=type==='csv'
+    ?`https://raw.githubusercontent.com/${A.cfg.user}/${A.cfg.repo}/main/workout-log.csv`
+    :`https://raw.githubusercontent.com/${A.cfg.user}/${A.cfg.repo}/main/profile.json`;
+  navigator.clipboard.writeText(url).then(()=>toast('URL copied!','ok')).catch(()=>prompt('Copy this URL:',url));
+}
+
+// === PROFILE ===
+function fillProfile(){
+  const p=A.profile;
+  [['pfn','firstName'],['pby','birthYear'],['pg','gender'],
+   ['pgoals','goals'],['plikes','likes'],['pdis','dislikes'],
+   ['pinj','injuries'],['plim','limitations'],['pnotes','notes']
+  ].forEach(([id,k])=>{const el=g(id);if(el)el.value=p[k]||''});
+}
+async function saveProfile(){
+  [['pfn','firstName'],['pby','birthYear'],['pg','gender'],
+   ['pgoals','goals'],['plikes','likes'],['pdis','dislikes'],
+   ['pinj','injuries'],['plim','limitations'],['pnotes','notes']
+  ].forEach(([id,k])=>{
+    const el=g(id);if(!el)return;
+    const v=el.value.trim();
+    A.profile[k]=k==='birthYear'?(v?parseInt(v)||null:null):(v||'');
+  });
+  if(!hasCfg()){toast('Set up GitHub in Settings first','err');return}
+  showLd('Saving profile…');
+  try{
+    const r=await ghPut('profile.json',JSON.stringify(A.profile,null,2),A.sha.profile,'Update profile');
+    A.sha.profile=r.content.sha;hideLd();toast('Profile saved!','ok');back();
+  }catch(e){hideLd();toast(`Save failed: ${e.message}`,'err')}
+}
+
+// === EQUIPMENT MANAGER ===
+function renderEquip(){
+  const my=A.gyms.filter(x=>!x._gen);
+  let h='<div class="sh">MY GYMS</div>';
+  h+=my.length?my.map(g2=>`<div class="ei"><div class="eh" onclick="openGymEq('${g2.id}')"><span style="font-size:20px">${g2.icon||'🏋️'}</span><span class="en">${x(g2.name)}</span><div class="ea" onclick="event.stopPropagation()"><button onclick="editGym('${g2.id}')" title="Edit">✏️</button><button onclick="delGym('${g2.id}')" title="Delete">🗑️</button></div><span class="ch">›</span></div></div>`).join(''):'<div class="em" style="padding:20px 24px"><p>No gyms added yet.</p></div>';
+  h+=`<button class="addb" onclick="addGym()">＋ Add Gym</button>`;
+  h+=`<div class="sh" style="margin-top:8px">GENERIC GYM</div><div class="sg"><div class="si"><span>Common Machines</span><span style="color:var(--dim);font-size:13px">Read-only</span></div></div>`;
+  g('eqlist').innerHTML=h;
+}
+function openGymEq(gid){
+  const g2=A.gyms.find(g=>g.id===gid);if(!g2)return;
+  A.gym=g2;renderGymEq();nav('gymeq');
+}
+function renderGymEq(){
+  const g2=A.gym;
+  g('geqttl').textContent=g2.name;
+  let h='<div class="sh">ROOMS</div>';
+  h+=g2.rooms.map(r=>`<div class="ei"><div class="eh" onclick="openRoomEq('${r.id}')"><span class="en">${x(r.name)}</span><span style="color:var(--dim);font-size:13px;margin-right:8px">${r.machines.length} machines</span><div class="ea" onclick="event.stopPropagation()"><button onclick="editRoom('${r.id}')" title="Edit">✏️</button><button onclick="delRoom('${r.id}')" title="Delete">🗑️</button></div><span class="ch">›</span></div></div>`).join('');
+  h+=`<button class="addb" onclick="addRoom()">＋ Add Room</button>`;
+  g('geqbody').innerHTML=h;
+}
+function openRoomEq(rid){
+  const r=A.gym.rooms.find(r=>r.id===rid);if(!r)return;
+  A.room=r;renderRoomEq();nav('roomeq');
+}
+function renderRoomEq(){
+  const r=A.room;
+  g('reqttl').textContent=r.name;
+  let h='<div class="sh">MACHINES</div>';
+  h+=r.machines.map(m=>`<div class="sg" style="margin:6px 16px"><div class="si"><span style="flex:1;font-size:15px">${x(m.name)}</span><button onclick="editMachine('${m.id}')" style="background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;padding:4px">✏️</button><button onclick="delMachine('${m.id}')" style="background:none;border:none;color:var(--bad);font-size:16px;cursor:pointer;padding:4px">🗑️</button></div></div>`).join('');
+  h+=`<button class="addb" onclick="addMachine()">＋ Add Machine</button>`;
+  g('reqbody').innerHTML=h;
+}
+
+// === EQUIPMENT CRUD ===
+function addGym(){
+  A.pendingPhoto=null;
+  modal(`<h2>Add Gym</h2>
+    <div class="mr"><label>Gym Name</label><input id="m1" type="text" placeholder="e.g. Gold's Gym"></div>
+    <div class="mr"><label>Icon (emoji)</label><input id="m2" type="text" placeholder="🏋️" value="🏋️" maxlength="4"></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="mo" onclick="doAddGym()">Add</button></div>`);
+}
+function doAddGym(){
+  const name=(g('m1')||{}).value||'';const trimmed=name.trim();
+  if(!trimmed){toast('Enter a name','err');return}
+  const icon=(g('m2')||{}).value||'🏋️';
+  const id=slug(trimmed);
+  const g2={id,name:trimmed,icon:icon.trim()||'🏋️',isGeneric:false,rooms:[{id:'main',name:trimmed,machines:[]}],_path:`equipment/my-gyms/${id}`,_gen:false};
+  A.gyms.push(g2);closeMod();
+  saveGym(g2).then(()=>{renderEquip();renderHome();toast(`${trimmed} added!`,'ok')}).catch(e=>toast(e.message,'err'));
+}
+function editGym(gid){
+  const g2=A.gyms.find(g=>g.id===gid);if(!g2)return;
+  modal(`<h2>Edit Gym</h2>
+    <div class="mr"><label>Name</label><input id="m1" type="text" value="${x(g2.name)}"></div>
+    <div class="mr"><label>Icon</label><input id="m2" type="text" value="${g2.icon||'🏋️'}" maxlength="4"></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="mo" onclick="doEditGym('${gid}')">Save</button></div>`);
+}
+function doEditGym(gid){
+  const g2=A.gyms.find(g=>g.id===gid);if(!g2)return;
+  g2.name=(g('m1')||{}).value||g2.name;g2.name=g2.name.trim()||g2.name;
+  g2.icon=((g('m2')||{}).value||'').trim()||g2.icon;
+  closeMod();
+  saveGym(g2).then(()=>{renderEquip();renderHome();toast('Gym updated','ok')}).catch(e=>toast(e.message,'err'));
+}
+function delGym(gid){
+  const g2=A.gyms.find(g=>g.id===gid);if(!g2)return;
+  if(!confirm(`Remove ${g2.name} from the app?\n(GitHub files are not deleted; workout history is kept.)`))return;
+  A.gyms=A.gyms.filter(g=>g.id!==gid);renderEquip();renderHome();toast(`${g2.name} removed`,'ok');
+}
+function addRoom(){
+  modal(`<h2>Add Room</h2>
+    <div class="mr"><label>Room Name</label><input id="m1" type="text" placeholder="e.g. Machine Room"></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="mo" onclick="doAddRoom()">Add</button></div>`);
+}
+function doAddRoom(){
+  const name=((g('m1')||{}).value||'').trim();if(!name){toast('Enter a name','err');return}
+  const r={id:slug(name)+'-'+Date.now(),name,machines:[]};
+  A.gym.rooms.push(r);closeMod();
+  saveGym(A.gym).then(()=>{renderGymEq();toast(`${name} added!`,'ok')}).catch(e=>toast(e.message,'err'));
+}
+function editRoom(rid){
+  const r=A.gym.rooms.find(r=>r.id===rid);if(!r)return;
+  modal(`<h2>Edit Room</h2>
+    <div class="mr"><label>Name</label><input id="m1" type="text" value="${x(r.name)}"></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="mo" onclick="doEditRoom('${rid}')">Save</button></div>`);
+}
+function doEditRoom(rid){
+  const r=A.gym.rooms.find(r=>r.id===rid);if(!r)return;
+  r.name=((g('m1')||{}).value||'').trim()||r.name;closeMod();
+  saveGym(A.gym).then(()=>{renderGymEq();toast('Room updated','ok')}).catch(e=>toast(e.message,'err'));
+}
+function delRoom(rid){
+  const r=A.gym.rooms.find(r=>r.id===rid);if(!r)return;
+  if(!confirm(`Delete room "${r.name}"?`))return;
+  A.gym.rooms=A.gym.rooms.filter(r=>r.id!==rid);
+  saveGym(A.gym).then(()=>{renderGymEq();toast('Room deleted','ok')}).catch(e=>toast(e.message,'err'));
+}
+function addMachine(){
+  A.pendingPhoto=null;
+  modal(`<h2>Add Machine</h2>
+    <div class="mr"><label>Name</label><input id="m1" type="text" placeholder="e.g. Chest Press"></div>
+    <div class="mr"><label>Muscles Worked</label><input id="m2" type="text" placeholder="e.g. Chest, shoulders, triceps"></div>
+    <div class="mr"><label>Log Type</label><select id="m3"><option value="weight">Weight &amp; Reps</option><option value="cardio">Duration &amp; Level (Cardio)</option></select></div>
+    <div class="mr"><label>Photo (optional)</label><div class="pa" id="mpa" onclick="trigPhoto()"><span style="font-size:36px">📷</span><span class="ph">Tap to take photo</span></div></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="mo" onclick="doAddMachine()">Add</button></div>`);
+}
+async function doAddMachine(){
+  const name=((g('m1')||{}).value||'').trim();if(!name){toast('Enter a name','err');return}
+  const muscles=((g('m2')||{}).value||'').trim();
+  const logType=(g('m3')||{}).value||'weight';
+  const id='m'+Date.now();let imgFile=null;
+  closeMod();showLd('Saving machine…');
+  try{
+    if(A.pendingPhoto){
+      imgFile=`${id}.jpg`;
+      await ghPutImg(`${A.gym._path}/images/${imgFile}`,A.pendingPhoto,null);
+    }
+    const m={id,name,musclesWorked:muscles,image:imgFile,logType};
+    A.room.machines.push(m);
+    await saveGym(A.gym);
+    hideLd();renderRoomEq();toast(`${name} added!`,'ok');
+  }catch(e){hideLd();toast(e.message,'err')}
+  A.pendingPhoto=null;
+}
+function editMachine(mid){
+  const m=A.room.machines.find(m=>m.id===mid);if(!m)return;
+  A.pendingPhoto=null;
+  const iu=imgUrl(A.gym,m.image);
+  modal(`<h2>Edit Machine</h2>
+    <div class="mr"><label>Name</label><input id="m1" type="text" value="${x(m.name)}"></div>
+    <div class="mr"><label>Muscles Worked</label><input id="m2" type="text" value="${x(m.musclesWorked||'')}"></div>
+    <div class="mr"><label>Log Type</label><select id="m3"><option value="weight"${m.logType==='weight'?' selected':''}>Weight &amp; Reps</option><option value="cardio"${m.logType==='cardio'?' selected':''}>Duration &amp; Level (Cardio)</option></select></div>
+    <div class="mr"><label>Photo</label><div class="pa" id="mpa" onclick="trigPhoto()">${iu?`<img src="${iu}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`:'<span style="font-size:36px">📷</span>'}<span class="ph">${iu?'Tap to replace':'Tap to add photo'}</span></div></div>
+    <div class="mbs"><button class="mc2" onclick="closeMod()">Cancel</button><button class="md2" onclick="doDelMachine('${mid}')">Delete</button><button class="mo" onclick="doEditMachine('${mid}')">Save</button></div>`);
+}
+async function doEditMachine(mid){
+  const m=A.room.machines.find(m=>m.id===mid);if(!m)return;
+  m.name=((g('m1')||{}).value||'').trim()||m.name;
+  m.musclesWorked=((g('m2')||{}).value||'').trim();
+  m.logType=(g('m3')||{}).value||m.logType;
+  closeMod();showLd('Saving…');
+  try{
+    if(A.pendingPhoto){
+      const fn=m.image||`${mid}.jpg`;
+      await ghPutImg(`${A.gym._path}/images/${fn}`,A.pendingPhoto,null);
+      m.image=fn;
+    }
+    await saveGym(A.gym);hideLd();renderRoomEq();toast('Machine updated','ok');
+  }catch(e){hideLd();toast(e.message,'err')}
+  A.pendingPhoto=null;
+}
+function doDelMachine(mid){
+  const m=A.room.machines.find(m=>m.id===mid);if(!m)return;
+  if(!confirm(`Delete "${m.name}"?\nWorkout history is kept.`))return;
+  closeMod();A.room.machines=A.room.machines.filter(m=>m.id!==mid);
+  saveGym(A.gym).then(()=>{renderRoomEq();toast('Machine deleted','ok')}).catch(e=>toast(e.message,'err'));
+}
+function delMachine(mid){editMachine(mid)}
+
+async function saveGym(gym){
+  if(!hasCfg())return;
+  const data={id:gym.id,name:gym.name,icon:gym.icon,isGeneric:gym.isGeneric||false,rooms:gym.rooms.map(r=>({id:r.id,name:r.name,machines:r.machines.map(m=>({id:m.id,name:m.name,musclesWorked:m.musclesWorked||'',image:m.image||null,logType:m.logType||'weight'}))}))};
+  const path=`${gym._path}/gym.json`;
+  const sha=A.sha.gym[path]||null;
+  const res=await ghPut(path,JSON.stringify(data,null,2),sha,`Update ${gym.name}`);
+  A.sha.gym[path]=res.content.sha;
+}
+
+// === PHOTO ===
+function trigPhoto(){g('photoin').click()}
+g('photoin').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      const max=800;let w=img.width,h=img.height;
+      if(w>h&&w>max){h=Math.round(h*max/w);w=max}
+      else if(h>max){w=Math.round(w*max/h);h=max}
+      c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      const data=c.toDataURL('image/jpeg',.82);
+      A.pendingPhoto=data.split(',')[1];
+      const pa=document.getElementById('mpa');
+      if(pa)pa.innerHTML=`<img src="${data}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><span class="ph">Photo ready ✓</span>`;
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);e.target.value='';
+});
+
+// === MODAL ===
+function modal(html){g('mdbody').innerHTML=html;g('mov').classList.add('on')}
+function closeMod(e){
+  if(e&&e.target!==g('mov'))return;
+  g('mov').classList.remove('on');
+}
+
+// === UI HELPERS ===
+function showLd(msg){g('ldmsg').textContent=msg||'Loading…';g('ld').classList.add('on')}
+function hideLd(){g('ld').classList.remove('on')}
+let _tt;
+function toast(msg,type){
+  const el=g('toast');el.textContent=msg;el.className=`on${type?' '+type:''}`;
+  clearTimeout(_tt);_tt=setTimeout(()=>{el.className=''},3500);
+}
+function g(id){return document.getElementById(id)}
+function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
+
+// === INIT ===
+loadCfg();loadAll();
+</script>
+</body>
+</html>
