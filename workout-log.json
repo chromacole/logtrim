@@ -62,5 +62,53 @@
     "incline": null,
     "hr": null,
     "notes": ""
+  },
+  {
+    "machineId": "squats",
+    "machine": "Squats",
+    "gym": "Common Machines",
+    "room": "Bodyweight — No Equipment",
+    "date": "2026-08-23",
+    "datetime": "2026-08-23 10:19:18 PM",
+    "set": 2,
+    "weight": null,
+    "reps": 10,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
+    "machineId": "squats",
+    "machine": "Squats",
+    "gym": "Common Machines",
+    "room": "Bodyweight — No Equipment",
+    "date": "2026-08-23",
+    "datetime": "2026-08-23 10:19:18 PM",
+    "set": 3,
+    "weight": null,
+    "reps": 4,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
+    "machineId": "squats",
+    "machine": "Squats",
+    "gym": "Common Machines",
+    "room": "Bodyweight — No Equipment",
+    "date": "2026-08-23",
+    "datetime": "2026-08-23 10:19:18 PM",
+    "set": 4,
+    "weight": null,
+    "reps": 3,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
   }
 ]
