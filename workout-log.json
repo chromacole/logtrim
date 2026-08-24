@@ -30,5 +30,21 @@
     "incline": null,
     "hr": null,
     "notes": ""
+  },
+  {
+    "machineId": "treadmill",
+    "machine": "Treadmill",
+    "gym": "Common Machines",
+    "room": "Cardio",
+    "date": "2026-08-23",
+    "datetime": "2026-08-23 09:34:43 PM",
+    "set": 1,
+    "weight": null,
+    "reps": null,
+    "duration": 10,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
   }
 ]
