@@ -46,5 +46,21 @@
     "incline": null,
     "hr": null,
     "notes": ""
+  },
+  {
+    "machineId": "squats",
+    "machine": "Squats",
+    "gym": "Common Machines",
+    "room": "Bodyweight — No Equipment",
+    "date": "2026-08-23",
+    "datetime": "2026-08-23 10:14:58 PM",
+    "set": 1,
+    "weight": null,
+    "reps": 10,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
   }
 ]
