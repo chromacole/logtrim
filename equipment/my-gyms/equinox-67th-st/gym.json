@@ -1,0 +1,13 @@
+{
+  "id": "equinox-67th-st",
+  "name": "Equinox 67th St",
+  "icon": "🌳",
+  "isGeneric": false,
+  "rooms": [
+    {
+      "id": "main",
+      "name": "Equinox 67th St",
+      "machines": []
+    }
+  ]
+}
