@@ -13,6 +13,11 @@
       "id": "machines-1787930905828",
       "name": "Weight Machines",
       "machines": []
+    },
+    {
+      "id": "cardio-1787930927650",
+      "name": "Cardio",
+      "machines": []
     }
   ]
 }
