@@ -12,7 +12,15 @@
     {
       "id": "machines-1787930905828",
       "name": "Weight Machines",
-      "machines": []
+      "machines": [
+        {
+          "id": "m1787930960837",
+          "name": "Chest Press",
+          "musclesWorked": "",
+          "image": "m1787930960837.jpg",
+          "logType": "weight"
+        }
+      ]
     },
     {
       "id": "cardio-1787930927650",
