@@ -49,6 +49,11 @@
       "id": "cardio-1787930927650",
       "name": "Cardio",
       "machines": []
+    },
+    {
+      "id": "calisthenics-1787931538266",
+      "name": "Calisthenics",
+      "machines": []
     }
   ]
 }
