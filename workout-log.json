@@ -112,6 +112,22 @@
     "notes": ""
   },
   {
+    "machineId": "m1787931559984",
+    "machine": "Leg Raise",
+    "gym": "Equinox 67th St",
+    "room": "Calisthenics",
+    "date": "2026-08-28",
+    "datetime": "2026-08-28 11:42:07 AM",
+    "set": 1,
+    "weight": null,
+    "reps": 10,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
     "machineId": "walk",
     "machine": "Walk",
     "gym": "Common Machines",
