@@ -400,6 +400,22 @@
     "notes": ""
   },
   {
+    "machineId": "m1787931027672",
+    "machine": "Pulldown Machine",
+    "gym": "Equinox 67th St",
+    "room": "Weight Machines",
+    "date": "2026-08-28",
+    "datetime": "2026-08-28 12:00:34 PM",
+    "set": 1,
+    "weight": 90,
+    "reps": 14,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
     "machineId": "walk",
     "machine": "Walk",
     "gym": "Common Machines",
