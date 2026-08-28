@@ -16,6 +16,22 @@
     "notes": ""
   },
   {
+    "machineId": "m1787930981077",
+    "machine": "Shoulder Press",
+    "gym": "Equinox 67th St",
+    "room": "Weight Machines",
+    "date": "2026-08-28",
+    "datetime": "2026-08-28 11:35:02 AM",
+    "set": 1,
+    "weight": 23,
+    "reps": 10,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
     "machineId": "walk",
     "machine": "Walk",
     "gym": "Common Machines",
