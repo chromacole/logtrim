@@ -63,6 +63,13 @@
           "musclesWorked": "",
           "image": "m1788033698405.jpg",
           "logType": "weight"
+        },
+        {
+          "id": "m1788034988030",
+          "name": "Row",
+          "musclesWorked": "",
+          "image": "m1788034988030.jpg",
+          "logType": "weight"
         }
       ]
     },
