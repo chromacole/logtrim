@@ -42,6 +42,13 @@
           "musclesWorked": "",
           "image": "m1787931050958.jpg",
           "logType": "weight"
+        },
+        {
+          "id": "m1788033046060",
+          "name": "Leg extension",
+          "musclesWorked": "",
+          "image": "m1788033046060.jpg",
+          "logType": "weight"
         }
       ]
     },
