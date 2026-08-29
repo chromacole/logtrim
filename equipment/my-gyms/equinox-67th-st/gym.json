@@ -56,6 +56,13 @@
           "musclesWorked": "",
           "image": "m1788033265742.jpg",
           "logType": "weight"
+        },
+        {
+          "id": "m1788033698405",
+          "name": "Leg curl",
+          "musclesWorked": "",
+          "image": "m1788033698405.jpg",
+          "logType": "weight"
         }
       ]
     },
