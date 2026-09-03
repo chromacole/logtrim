@@ -1,5 +1,21 @@
 [
   {
+    "machineId": "m1787931027672",
+    "machine": "Pulldown Machine",
+    "gym": "Equinox 67th St",
+    "room": "Weight Machines",
+    "date": "2026-09-03",
+    "datetime": "2026-09-03 12:31:40 PM",
+    "set": 1,
+    "weight": 90,
+    "reps": 1,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
     "machineId": "m1788033046060",
     "machine": "Leg extension",
     "gym": "Equinox 67th St",
