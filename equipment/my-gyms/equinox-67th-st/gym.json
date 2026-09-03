@@ -108,6 +108,13 @@
           "musclesWorked": "",
           "image": null,
           "logType": "weight"
+        },
+        {
+          "id": "m1788453334735",
+          "name": "Walking Lunges",
+          "musclesWorked": "",
+          "image": null,
+          "logType": "weight"
         }
       ]
     }
