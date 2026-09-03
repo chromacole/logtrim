@@ -94,7 +94,15 @@
     {
       "id": "weights-1788453129623",
       "name": "Weights",
-      "machines": []
+      "machines": [
+        {
+          "id": "m1788453141426",
+          "name": "Goblet squat",
+          "musclesWorked": "",
+          "image": null,
+          "logType": "weight"
+        }
+      ]
     }
   ]
 }
