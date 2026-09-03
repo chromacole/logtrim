@@ -32,6 +32,22 @@
     "notes": ""
   },
   {
+    "machineId": "m1788453164036",
+    "machine": "Bench",
+    "gym": "Equinox 67th St",
+    "room": "Weights",
+    "date": "2026-09-03",
+    "datetime": "2026-09-03 12:34:04 PM",
+    "set": 1,
+    "weight": 90,
+    "reps": 1,
+    "duration": null,
+    "level": null,
+    "incline": null,
+    "hr": null,
+    "notes": ""
+  },
+  {
     "machineId": "m1788033046060",
     "machine": "Leg extension",
     "gym": "Equinox 67th St",
