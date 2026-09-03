@@ -90,6 +90,11 @@
           "logType": "weight"
         }
       ]
+    },
+    {
+      "id": "weights-1788453129623",
+      "name": "Weights",
+      "machines": []
     }
   ]
 }
