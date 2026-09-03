@@ -115,6 +115,13 @@
           "musclesWorked": "",
           "image": null,
           "logType": "weight"
+        },
+        {
+          "id": "m1788453721780",
+          "name": "Lunges",
+          "musclesWorked": "",
+          "image": null,
+          "logType": "weight"
         }
       ]
     }
